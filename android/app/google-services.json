@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "897182599759",
+    "project_id": "testnewtyapp",
+    "storage_bucket": "testnewtyapp.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:897182599759:android:3044f9dc0c446b7281f83a",
+        "android_client_info": {
+          "package_name": "com.example.educapp_demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "897182599759-g60juut3ehrtpn5n86f1gvffa1pi661q.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.educapp_demo",
+            "certificate_hash": "82075f3d69af784e7442a21ffd25f745c07997bc"
+          }
+        },
+        {
+          "client_id": "897182599759-sd51f7seo05drnlkaedntrmlu923p4mo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBd3qWMj8yAWQVAYKuNmn5Sc3QBy3rdC_k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "897182599759-rs5pgl2t7bltqj0falf6j3eu0j0312or.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
