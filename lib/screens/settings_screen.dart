@@ -1,4 +1,4 @@
-import 'package:educapp_demo/config.dart';
+import 'package:educapp_demo/config.dart' as AppConfig;
 import 'package:educapp_demo/utils/audio_singleton.dart'; // Importa tu Singleton
 import 'package:educapp_demo/screens/login/login_screen.dart';
 import 'package:educapp_demo/screens/notification_screen.dart';
@@ -60,7 +60,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     if (id == null) return false;
 
     final int idpadres = int.parse(id);
-    final url = Uri.parse('${Config.baseUrl}/padres/padres/$idpadres/');
+    final url = Uri.parse('${AppConfig.Config.baseUrl}/padres/padres/$idpadres/');
 
     try {
       final response = await http.delete(

@@ -4,11 +4,14 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:educapp_demo/firebase_options.dart';
 import 'dart:async';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+  options: DefaultFirebaseOptions.currentPlatform,
+);
   runApp(
     MultiProvider(
       providers: [

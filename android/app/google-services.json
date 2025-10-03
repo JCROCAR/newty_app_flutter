@@ -37,6 +37,13 @@
             {
               "client_id": "897182599759-rs5pgl2t7bltqj0falf6j3eu0j0312or.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "897182599759-rht78nk8lctlgo6c8sbiia516si4g3bp.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.educappDemo"
+              }
             }
           ]
         }

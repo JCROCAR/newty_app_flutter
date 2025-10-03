@@ -5,13 +5,17 @@ class Config {
 
   // URL base para producción
   static const String _baseUrlProd = 'https://tuapi.com/api';
-
+  
+    // URL base para para pruebas con ngrok (backend en mi local windows)
+  static const String _baseUrlDevWindows = 'https://uncombustible-nonspiny-kaylen.ngrok-free.dev/api';
+  
+  
   static String get baseUrl {
     // Aquí decides si estás en modo desarrollo o producción
     // Puedes usar una variable de entorno o un flag en el código
     // Para este ejemplo, usaremos un booleano que deberás ajustar manualmente
     bool isProduction = false; // Cambia a true cuando estés en producción
 
-    return isProduction ? _baseUrlProd : _baseUrlDev;
-  }
+    //return isProduction ? _baseUrlProd : _baseUrlDev;
+    return isProduction ? _baseUrlProd : _baseUrlDevWindows;  }
 }
