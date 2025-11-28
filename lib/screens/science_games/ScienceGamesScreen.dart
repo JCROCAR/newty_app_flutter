@@ -2,6 +2,8 @@ import 'dart:convert';
 import 'package:educapp_demo/screens/science_games/science_screen_1.dart';
 import 'package:educapp_demo/screens/science_games/science_screen_2.dart';
 import 'package:educapp_demo/screens/science_games/science_screen_3.dart';
+import 'package:educapp_demo/screens/science_games/science_screen_4.dart';
+import 'package:educapp_demo/screens/science_games/science_screen_5.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -28,6 +30,8 @@ class _ScienceGamesSectionState extends State<ScienceGamesSection> {
     'animal_sonido': (id) => ScienceScreen1(actividadId: id),
     'animal_dondevive': (id) => ScienceScreen2(actividadId: id),
     'nombre_imagen': (id) => ScienceScreen3(actividadId: id),
+    'colores_cubos': (id) => ScienceScreen4(actividadId: id),
+    'ambientes': (id) => ScienceScreen5(actividadId: id),
   };
 
   @override

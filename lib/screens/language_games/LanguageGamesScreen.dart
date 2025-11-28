@@ -38,7 +38,7 @@ class _LanguageGamesSectionState extends State<LanguageGamesSection> {
 
   Future<void> _loadActividadNoJugada() async {
     const int categoriaId = 4;
-    final result = await _actividadService.fetchActividadNoJugada(categoriaId);
+    final result = await _actividadService.fetchActividadNoJugada(context, categoriaId);
 
     if (result['error']) {
       setState(() {

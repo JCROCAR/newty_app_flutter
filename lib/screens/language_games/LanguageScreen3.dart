@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
 
 import '../../services/actividad_registrada_service.dart';
+import '../../widgets/instructions_text.dart';
 
 
 class LanguageScreen3 extends StatefulWidget {
@@ -26,7 +27,7 @@ class _LanguageScreen3State extends State<LanguageScreen3> {
 
   final FlutterTts _flutterTts = FlutterTts();
   final List<_WordItem> _items = [
-    _WordItem(image: 'assets/house.jpg', word: 'CASA'),
+    _WordItem(image: 'assets/casa.png', word: 'CASA'),
     _WordItem(image: 'assets/pelota.png', word: 'PELOTA'),
     _WordItem(image: 'assets/vehiculo.png', word: 'VEHICULO'),
     _WordItem(image: 'assets/estrella.png', word: 'ESTRELLA'),
@@ -39,7 +40,7 @@ class _LanguageScreen3State extends State<LanguageScreen3> {
 
   late _WordItem _currentItem;
   List<Color> _letterColors = [];
-  final Color _fixedColor = Colors.deepPurple; // Color fijo para colorear letras
+  final Color _fixedColor = Color(0XFFEF898F); // Color fijo para colorear letras
 
   @override
   void initState() {
@@ -62,7 +63,7 @@ class _LanguageScreen3State extends State<LanguageScreen3> {
     _speakIntro();
 
     _currentItem = _items[Random().nextInt(_items.length)];
-    _letterColors = List.generate(_currentItem.word.length, (index) => Colors.black.withOpacity(0.5));
+    _letterColors = List.generate(_currentItem.word.length, (index) => Colors.grey);
   }
 
 
@@ -119,25 +120,33 @@ class _LanguageScreen3State extends State<LanguageScreen3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFFEAF6F6),
+      backgroundColor: Color(0xFFF2FBFC),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Positioned(
-              top: 40,
-              right: 20,
-              child: ElevatedButton(
-                onPressed: () => _speakIntro(),
-                child: Icon(Icons.volume_up, size: 20),
-                style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                    padding: EdgeInsets.all(10)
-                ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Center(
+                    child: TitleText(text: 'Colorea las letras'),
+                  ),
+                  Positioned(
+                    right: 125,
+                    child: IconButton(
+                      icon:  Icon(Icons.volume_up,
+                          size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
+                      onPressed: _speakIntro, // 🔈 Aquí irá la función para reproducir audio
+                    ),
+                  ),
+                ],
               ),
             ),
+            SizedBox(height: 30),
             Container(
-              constraints: BoxConstraints(maxHeight: 200, maxWidth: 200),
+              constraints: BoxConstraints(maxHeight: 150, maxWidth: 150),
               child: Image.asset(_currentItem.image, fit: BoxFit.contain),
             ),
             SizedBox(height: 20),
@@ -150,14 +159,14 @@ class _LanguageScreen3State extends State<LanguageScreen3> {
                   child: Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
+                      border: Border.all(color: Colors.transparent),
                       color: _letterColors[index],
                     ),
                     child: Text(
                       _currentItem.word[index],
                       style:GoogleFonts.openSans(
                         textStyle: TextStyle(
-                          fontSize: 40,
+                          fontSize: 25,
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                         ),

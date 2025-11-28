@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:educapp_demo/screens/math_games/math_screen_4.dart';
+import 'package:educapp_demo/screens/math_games/math_screen_5.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -7,6 +9,7 @@ import 'package:educapp_demo/screens/math_games/math_screen_2.dart';
 import 'package:educapp_demo/screens/math_games/math_screen_3.dart';
 import '../../config.dart';
 import '../../services/actividad_service.dart';
+import 'math_screen_6.dart';
 
 
 // Clase principal para la sección de juegos de matemática
@@ -27,6 +30,9 @@ class _MathGamesSectionState extends State<MathGamesSection> {
     'contador_frutas': (id) => MathScreen1(actividadId: id),
     'indica_numero': (id) => MathScreen2(actividadId: id),
     'completa_secuencia': (id) => MathScreen3(actividadId: id),
+    'cantidad_objetos': (id) => MathScreen4(actividadId: id),
+    'grupo_mas_grande': (id) => MathScreen5(actividadId: id),
+    'contador': (id) => MathScreen6(actividadId: id),
   };
 
   @override
@@ -37,7 +43,7 @@ class _MathGamesSectionState extends State<MathGamesSection> {
 
   Future<void> _loadActividadNoJugada() async {
     const int categoriaId = 1;
-    final result = await _actividadService.fetchActividadNoJugada(categoriaId);
+    final result = await _actividadService.fetchActividadNoJugada(context, categoriaId);
 
     if (result['error']) {
       setState(() {

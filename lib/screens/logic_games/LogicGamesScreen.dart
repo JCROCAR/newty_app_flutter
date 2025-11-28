@@ -1,8 +1,13 @@
+import 'package:educapp_demo/screens/logic_games/logic_screen_4.dart';
+import 'package:educapp_demo/screens/logic_games/logic_screen_7.dart';
+import 'package:educapp_demo/screens/logic_games/logic_screen_8.dart';
 import 'package:flutter/material.dart';
 import 'package:educapp_demo/screens/logic_games/logic_screen_1.dart';
 import 'package:educapp_demo/screens/logic_games/logic_screen_2.dart';
 import 'package:educapp_demo/screens/logic_games/logic_screen_3.dart';
+import 'package:educapp_demo/screens/logic_games/logic_screen_5.dart';
 import '../../services/actividad_service.dart';
+import 'logic_screen_6.dart';
 
 
 
@@ -25,6 +30,11 @@ class _LogicGamesSectionState extends State<LogicGamesSection> {
     'selecciona_transporte': (id) => LogicScreen1(actividadId: id),
     'arrastra_silueta': (id) => LogicScreen2(actividadId: id),
     'selecciona_color': (id) => LogicScreen3(actividadId: id),
+    'completa_laberinto': (id) => LogicScreen4(actividadId: id),
+    'arrastra_frutas': (id) => LogicScreen5(actividadId: id),
+    'completa_rompecabezas': (id) => LogicScreen6(actividadId: id),
+    'ordena_menor_mayor': (id) => LogicScreen7(actividadId: id),
+    'direccion_flechas': (id) => LogicScreen8(actividadId: id),
   };
 
   @override
@@ -35,7 +45,7 @@ class _LogicGamesSectionState extends State<LogicGamesSection> {
 
   Future<void> _loadActividadNoJugada() async {
     const int categoriaId = 3;
-    final result = await _actividadService.fetchActividadNoJugada(categoriaId);
+    final result = await _actividadService.fetchActividadNoJugada(context, categoriaId);
 
     if (result['error']) {
       setState(() {

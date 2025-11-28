@@ -1,7 +1,7 @@
 class Config {
   // URL base para desarrollo
   //static const String _baseUrlDev = 'http://10.0.2.2:8000/api';
-  static const String _baseUrlDev = 'http://192.168.1.72:8000/api';
+  static const String _baseUrlDev = 'http://192.168.1.73:8000/api';
 
   // URL base para producción
   static const String _baseUrlProd = 'https://tuapi.com/api';
@@ -17,5 +17,6 @@ class Config {
     bool isProduction = false; // Cambia a true cuando estés en producción
 
     //return isProduction ? _baseUrlProd : _baseUrlDev;
-    return isProduction ? _baseUrlProd : _baseUrlDevWindows;  }
+    return isProduction ? _baseUrlProd : _baseUrlDevWindows;
+  }
 }

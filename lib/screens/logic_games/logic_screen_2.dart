@@ -1,25 +1,20 @@
+import 'package:educapp_demo/widgets/instructions_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_tts/flutter_tts.dart';
 import 'package:audioplayers/audioplayers.dart';
-import 'package:educapp_demo/utils/audio_singleton.dart'; // Importa tu Singleton
-
+import 'package:educapp_demo/utils/audio_singleton.dart';
 import '../../services/actividad_registrada_service.dart';
-
-
-
 
 // Clase para recortar un Container en forma de triángulo
 class TriangleClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path()
-      ..moveTo(size.width / 2, 0) // Vértice superior
-      ..lineTo(0, size.height) // Vértice inferior izquierdo
-      ..lineTo(size.width, size.height) // Vértice inferior derecho
+      ..moveTo(size.width / 2, 0)
+      ..lineTo(0, size.height)
+      ..lineTo(size.width, size.height)
       ..close();
     return path;
   }
@@ -38,16 +33,15 @@ class LogicScreen2 extends StatefulWidget {
 }
 
 class _LogicScreen2State extends State<LogicScreen2> {
-
   final AudioPlayer _audioPlayer = AudioPlayer();
+  final BackgroundMusic _backgroundMusic = BackgroundMusic();
+  bool _wasBackgroundMusicPlaying = false;
+
   Map<String, bool?> silhouettes = {
     'square': null,
     'triangle': null,
     'circle': null,
   };
-
-  final BackgroundMusic _backgroundMusic = BackgroundMusic();
-  bool _wasBackgroundMusicPlaying = false;
 
   @override
   void initState() {
@@ -60,10 +54,7 @@ class _LogicScreen2State extends State<LogicScreen2> {
     ]);
 
     _wasBackgroundMusicPlaying = _backgroundMusic.isPlaying;
-    if (_wasBackgroundMusicPlaying) {
-      _backgroundMusic.stop();
-    }
-
+    if (_wasBackgroundMusicPlaying) _backgroundMusic.stop();
   }
 
   @override
@@ -72,239 +63,169 @@ class _LogicScreen2State extends State<LogicScreen2> {
       DeviceOrientation.landscapeLeft,
       DeviceOrientation.landscapeRight,
     ]);
-
-    if (_wasBackgroundMusicPlaying) {
-      _backgroundMusic.play();
-    }
-
+    if (_wasBackgroundMusicPlaying) _backgroundMusic.play();
     super.dispose();
   }
-
-  void _checkCompletion() {
-    if (silhouettes.values.every((value) => value == true)) {
-      Future.delayed(const Duration(seconds: 2), () async {
-        if (mounted) {
-          await PostRegistrarActividad.submitData(actividad: widget.actividadId);
-          Navigator.pop(context);
-        } 
-      });
-    }
-  }
-
 
   Future<void> _speakIntro() async {
     await _audioPlayer.stop();
     await _audioPlayer.play(AssetSource('arrastrafigurasilueta.wav'));
   }
 
+  void _checkCompletion() {
+    if (silhouettes.values.every((v) => v == true)) {
+      Future.delayed(const Duration(seconds: 2), () async {
+        if (mounted) {
+          await PostRegistrarActividad.submitData(actividad: widget.actividadId);
+          Navigator.pop(context);
+        }
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    // Usamos el mismo color exacto que tu versión anterior, sin cambio de opacidad
+    const backgroundColor =  Color(0xFFEAF6F6);
+
     return Scaffold(
-      body: Container(
-        color: const Color(0xFF87C5C4).withOpacity(0.7),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
+      backgroundColor: backgroundColor,
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          // Calculamos tamaño base, pero sin hacerlas demasiado pequeñas
+          double baseSize = constraints.maxWidth * 0.12;
+          if (baseSize < 80) baseSize = 80; // tamaño mínimo
+          if (baseSize > 100) baseSize = 100; // tamaño máximo
+
+          return Container(
+            width: constraints.maxWidth,
+            height: constraints.maxHeight,
+            color: backgroundColor,
             child: Column(
-              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Texto + icono juntos en una fila
+                // Título + botón de sonido
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      'Arrastra cada figura a su silueta',
-                      style: GoogleFonts.openSans(
-                        textStyle: const TextStyle(
-                          fontSize: 26,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF7C3AC8),
-                        ),
-                      ),
-                      textAlign: TextAlign.center,
+                    Flexible(
+                      child: TitleText(text: 'Arrastra cada figura a su silueta')
                     ),
-                    const SizedBox(width: 10),
-                    Positioned(
-                      top: 20,
-                      right: 20,
-                      child : IconButton(
-                        icon: const Icon(Icons.volume_up, size: 40, color: Colors.white),
-                        onPressed: () => _speakIntro(),
-                      ),
-                    )
-
+                    IconButton(
+                      icon:  Icon(Icons.volume_up, size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
+                      onPressed: _speakIntro,
+                    ),
                   ],
                 ),
 
                 const SizedBox(height: 30),
 
                 // Siluetas
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 40,
+                  runSpacing: 20,
                   children: [
-                    _buildSilhouette('square', Colors.blue),
-                    const SizedBox(width: 40),
-                    _buildSilhouette('triangle', Colors.red),
-                    const SizedBox(width: 40),
-                    _buildSilhouette('circle', Colors.green),
+                    _buildSilhouette('square', Colors.blue, baseSize),
+                    _buildSilhouette('triangle', Colors.red, baseSize),
+                    _buildSilhouette('circle', Colors.green, baseSize),
                   ],
                 ),
 
                 const SizedBox(height: 40),
 
                 // Figuras arrastrables
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 40,
+                  runSpacing: 20,
                   children: [
-                    _buildDraggableFigure('triangle', Colors.red),
-                    const SizedBox(width: 40),
-                    _buildDraggableFigure('circle', Colors.green),
-                    const SizedBox(width: 40),
-                    _buildDraggableFigure('square', Colors.blue),
+                    _buildDraggableFigure('triangle', Colors.red, baseSize),
+                    _buildDraggableFigure('circle', Colors.green, baseSize),
+                    _buildDraggableFigure('square', Colors.blue, baseSize),
                   ],
                 ),
               ],
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
+
   }
 
-  Widget _buildSilhouette(String shape, Color color) {
+  Widget _buildSilhouette(String shape, Color color, double size) {
     bool? isCorrect = silhouettes[shape];
     return DragTarget<String>(
       onAccept: (receivedShape) {
         setState(() {
-          if (receivedShape == shape) {
-            silhouettes[shape] = true;
-            _checkCompletion();
-          } else {
-            silhouettes[shape] = false;
+          silhouettes[shape] = receivedShape == shape;
+          if (silhouettes[shape] == true) _checkCompletion();
+          else {
             Future.delayed(const Duration(seconds: 1), () {
-              if (mounted) {
-                setState(() {
-                  silhouettes[shape] = null;
-                });
-              }
+              if (mounted) setState(() => silhouettes[shape] = null);
             });
           }
         });
       },
       builder: (context, candidateData, rejectedData) {
-        return Container(
-          width: 100,
-          height: 100,
-          child: Stack(
-            alignment: Alignment.center,
-            children: [
-              if (shape == 'square')
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    color: isCorrect == null
-                        ? Colors.white.withOpacity(0.3)
-                        : isCorrect
-                        ? color.withOpacity(0.5)
-                        : Colors.red.withOpacity(0.5),
-                  ),
-                )
-              else if (shape == 'circle')
-                Container(
-                  width: 80,
-                  height: 80,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isCorrect == null
-                        ? Colors.white.withOpacity(0.3)
-                        : isCorrect
-                        ? color.withOpacity(0.5)
-                        : Colors.red.withOpacity(0.5),
-                  ),
-                )
-              else if (shape == 'triangle')
-                  ClipPath(
-                    clipper: TriangleClipper(),
-                    child: Container(
-                      width: 80,
-                      height: 80,
-                      decoration: BoxDecoration(
-                        color: isCorrect == null
-                            ? Colors.white.withOpacity(0.3)
-                            : isCorrect
-                            ? color.withOpacity(0.5)
-                            : Colors.red.withOpacity(0.5),
-                      ),
-                    ),
-                  ),
-              if (isCorrect != null)
-                isCorrect
-                    ? Lottie.asset('assets/correct.json', height: 80, width: 80)
-                    : Lottie.asset('assets/incorrect.json', height: 80, width: 80),
-            ],
-          ),
+        Color fillColor = isCorrect == null
+            ? Colors.white.withOpacity(0.8)
+            : isCorrect
+            ? color.withOpacity(0.5)
+            : Colors.red.withOpacity(0.5);
+
+        return Stack(
+          alignment: Alignment.center,
+          children: [
+            _buildShape(shape, fillColor, size),
+            if (isCorrect != null)
+              Lottie.asset(
+                isCorrect ? 'assets/correct.json' : 'assets/incorrect.json',
+                height: size,
+                width: size,
+                repeat: false,
+              ),
+          ],
         );
       },
     );
   }
 
-  Widget _buildDraggableFigure(String shape, Color color) {
+  Widget _buildDraggableFigure(String shape, Color color, double size) {
     if (silhouettes[shape] == true) {
-      return const SizedBox(width: 100, height: 100);
+      return SizedBox(width: size, height: size);
     }
     return Draggable<String>(
       data: shape,
-      feedback: Container( // Cambiado de Material a Container con fondo transparente
-        width: 80,
-        height: 80,
-        color: Colors.transparent, // Fondo transparente
-        child: _buildShape(shape, color, isFeedback: true),
-      ),
-      childWhenDragging: Container(
-        width: 100,
-        height: 100,
+      feedback: Material(
         color: Colors.transparent,
+        child: _buildShape(shape, color, size),
       ),
-      child: Container(
-        width: 100,
-        height: 100,
-        child: _buildShape(shape, color),
-      ),
+      childWhenDragging: SizedBox(width: size, height: size),
+      child: _buildShape(shape, color, size),
     );
   }
 
-  Widget _buildShape(String shape, Color color, {bool isFeedback = false}) {
+  Widget _buildShape(String shape, Color color, double size) {
     if (shape == 'square') {
       return Container(
-        width: 80,
-        height: 80,
-        decoration: BoxDecoration(
-          color: color,
-        ),
+        width: size,
+        height: size,
+        decoration: BoxDecoration(color: color),
       );
     } else if (shape == 'circle') {
       return Container(
-        width: 80,
-        height: 80,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: color,
-        ),
+        width: size,
+        height: size,
+        decoration: BoxDecoration(shape: BoxShape.circle, color: color),
       );
     } else if (shape == 'triangle') {
       return ClipPath(
         clipper: TriangleClipper(),
-        child: Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: color,
-          ),
-        ),
+        child: Container(width: size, height: size, color: color),
       );
     }
-    return SizedBox.shrink();
+    return const SizedBox.shrink();
   }
 }

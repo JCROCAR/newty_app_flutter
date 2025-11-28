@@ -1,4 +1,5 @@
 import 'package:educapp_demo/utils/audio_singleton.dart'; // Importa tu Singleton
+import 'package:educapp_demo/widgets/instructions_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:audioplayers/audioplayers.dart';
@@ -87,14 +88,14 @@ class _ScienceScreen1State extends State<ScienceScreen1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF87C5C4).withOpacity(0.7),
+      backgroundColor: Color(0xFFF2FBFC),
       body: Stack(
         children: [
           Positioned(
             top: 20,
             right: 20,
             child: IconButton(
-              icon: Icon(Icons.volume_up, size: 40, color: Colors.white),
+              icon: Icon(Icons.volume_up, size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
               onPressed: playChickenSound,
             ),
           ),
@@ -104,17 +105,7 @@ class _ScienceScreen1State extends State<ScienceScreen1> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // Texto
-                 Text(
-                  '¿Qué animal hace este sonido?',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF7C3AC8)
-                    ),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
+                 TitleText(text: '¿Qué animal hace este sonido?'),
                 SizedBox(height: 25),
                 // Imágenes en fila horizontal
                 SingleChildScrollView(
@@ -122,11 +113,11 @@ class _ScienceScreen1State extends State<ScienceScreen1> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      buildAnimalOption(0, 'assets/cow.png', false), // Vaca
+                      buildAnimalOption(0, 'assets/vaca.png', false), // Vaca
                       const SizedBox(width: 20),
-                      buildAnimalOption(1, 'assets/chicken.png', true), // Pollo
+                      buildAnimalOption(1, 'assets/pollito.png', true), // Pollo
                       const SizedBox(width: 20),
-                      buildAnimalOption(2, 'assets/dog.png', false), // Perro
+                      buildAnimalOption(2, 'assets/perro.png', false), // Perro
                     ],
                   ),
                 ),
@@ -149,14 +140,14 @@ class _ScienceScreen1State extends State<ScienceScreen1> {
     return GestureDetector(
       onTap: () => checkAnswer(isChicken, index),
       child: Container(
-        width: 100,
-        height: 100,
+        width: 110,
+        height: 110,
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue[100] : Colors.white,
+          color: isSelected ? Colors.blue[100] : Colors.transparent,
           border: Border.all(
             color: isSelected
                 ? (isCorrectAnswer && isChicken ? Colors.green : Colors.red)
-                : Colors.black,
+                : Colors.transparent,
             width: 3,
           ),
           borderRadius: BorderRadius.circular(12),

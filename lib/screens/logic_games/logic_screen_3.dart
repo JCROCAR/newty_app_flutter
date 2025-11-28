@@ -1,28 +1,23 @@
 import 'dart:math';
+import 'package:educapp_demo/widgets/instructions_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:flutter_tts/flutter_tts.dart';
-import 'package:educapp_demo/utils/audio_singleton.dart'; // Importa tu Singleton
 import 'package:audioplayers/audioplayers.dart';
-
+import 'package:educapp_demo/utils/audio_singleton.dart';
 import '../../services/actividad_registrada_service.dart';
 
-
 class LogicScreen3 extends StatefulWidget {
-
   final int actividadId;
 
   const LogicScreen3({required this.actividadId});
-
 
   @override
   _LogicScreen3State createState() => _LogicScreen3State();
 }
 
 class _LogicScreen3State extends State<LogicScreen3> {
-
   final Map<String, Color> colors = {
     'rojo': Colors.red,
     'azul': Colors.blue,
@@ -53,13 +48,10 @@ class _LogicScreen3State extends State<LogicScreen3> {
     }
   }
 
-
   Future<void> _playAudio(String fileName) async {
     final player = AudioPlayer();
     await player.play(AssetSource('$fileName.wav'));
   }
-
-
 
   @override
   void dispose() {
@@ -83,7 +75,6 @@ class _LogicScreen3State extends State<LogicScreen3> {
     await _playAudio('tocacolor${targetColor.toLowerCase()}');
   }
 
-
   void _handleTap(String selectedColor) {
     if (isCorrect == true) return;
 
@@ -106,73 +97,101 @@ class _LogicScreen3State extends State<LogicScreen3> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(color: Color(0xFF87C5C4).withOpacity(0.7)),
-          Positioned(
-            top: 20,
-            right: 20,
-            child: IconButton(
-              icon: Icon(Icons.volume_up, size: 40, color: Colors.white),
-              onPressed: () => _playAudio('tocacolor${targetColor.toLowerCase()}'),
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          final screenWidth = constraints.maxWidth;
+          final screenHeight = constraints.maxHeight;
 
-            ),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+          // Tamaños base escalables
+          final circleSize = screenWidth * 0.12; // tamaño de botones
+          final animationSize = screenWidth * 0.25; // tamaño animación
+
+          return Container(
+            width: screenWidth,
+            height: screenHeight,
+            color: Color(0xFFEAF6F6),
+            child: Stack(
               children: [
-                Text(
-                  'Toca el color:',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF7C3AC8),
-                    ),
+                Positioned(
+                  top: 20,
+                  right: 20,
+                  child: IconButton(
+                    icon:  Icon(Icons.volume_up, size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
+                    onPressed: () => _playAudio('tocacolor${targetColor.toLowerCase()}'),
                   ),
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  targetColor.toUpperCase(),
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 40,
-                      fontWeight: FontWeight.bold,
-                      color: colors[targetColor],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 40),
-                Wrap(
-                  spacing: 20,
-                  runSpacing: 20,
-                  alignment: WrapAlignment.center,
-                  children: colors.entries.map((entry) {
-                    return GestureDetector(
-                      onTap: () => _handleTap(entry.key),
-                      child: Container(
-                        width: 100,
-                        height: 100,
-                        decoration: BoxDecoration(
-                          color: entry.value,
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 3),
+                Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // Texto "Toca el color" y nombre del color en FittedBox
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Column(
+                          children: [
+                            TitleText(text: 'Toca el color:'),
+                            const SizedBox(height: 10),
+                            Text(
+                              targetColor.toUpperCase(),
+                              style: GoogleFonts.openSans(
+                                textStyle: TextStyle(
+                                  fontSize: screenWidth * 0.05,
+                                  fontWeight: FontWeight.bold,
+                                  color: colors[targetColor],
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    );
-                  }).toList(),
+                      const SizedBox(height: 20),
+
+                      // Botones circulares
+                      Wrap(
+                        spacing: 20,
+                        runSpacing: 20,
+                        alignment: WrapAlignment.center,
+                        children: colors.entries.map((entry) {
+                          return GestureDetector(
+                            onTap: () => _handleTap(entry.key),
+                            child: Container(
+                              width: circleSize.clamp(70, 120),
+                              height: circleSize.clamp(70, 120),
+                              decoration: BoxDecoration(
+                                color: entry.value,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Colors.white, width: 3),
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                      ),
+
+                      const SizedBox(height: 20),
+
+                      // Animación responsive con Flexible
+                      if (isCorrect != null)
+                        Flexible(
+                          child: Center(
+                            child: Lottie.asset(
+                              isCorrect!
+                                  ? 'assets/correct.json'
+                                  : 'assets/incorrect.json',
+                              width: animationSize.clamp(100, 200),
+                              height: animationSize.clamp(100, 200),
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 20),
-                if (isCorrect != null)
-                  isCorrect!
-                      ? Lottie.asset('assets/correct.json', height: 100)
-                      : Lottie.asset('assets/incorrect.json', height: 100),
               ],
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
+
   }
 }

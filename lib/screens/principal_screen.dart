@@ -30,10 +30,10 @@ class _HomeScreenState extends State<HomeScreen> {
   String _selectedLevel = "Nivel 1"; // valor por defecto
 
   final List<Map<String, String>> categories = [
-    {'name': 'LÓGICA', 'image': 'rompecabezas.png'},
-    {'name': 'MATEMÁTICA', 'image': 'operaciones.png'},
-    {'name': 'CIENCIAS', 'image': 'ciencias.png'},
-    {'name': 'LENGUAJE', 'image': 'abc.png'},
+    {'name': 'LÓGICA', 'image': 'logica_categoria.png'},
+    {'name': 'MATEMÁTICA', 'image': 'matematica_categoria.png'},
+    {'name': 'CIENCIAS', 'image': 'ciencia_categoria.png'},
+    {'name': 'LENGUAJE', 'image': 'lenguaje_categoria.png'},
   ];
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -115,18 +115,37 @@ class _HomeScreenState extends State<HomeScreen> {
             left: 0,
             right: 0,
             child: Center(
-              child: Text(
-                _selectedLevel,
-                style: GoogleFonts.openSans(
-                  textStyle: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.purple,
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 5.0),
+                decoration: BoxDecoration(
+                  color: Color(0xFFEF898F),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: Color(0xFFEF898F),
+                    width: 2,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Color(0xFFEF898F).withOpacity(0.3),
+                      blurRadius: 6,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  _selectedLevel,
+                  style: GoogleFonts.openSans(
+                    textStyle: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
               ),
             ),
           ),
+
           // 🔹 Avatar + nombre usuario (a la izquierda)
           Positioned(
             top: 16.0,
@@ -180,7 +199,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           duration: const Duration(milliseconds: 300),
                           curve: Curves.easeInOut,
                           decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.7),
+                            color: Colors.transparent,
                             borderRadius: BorderRadius.circular(20),
                           ),
                           width: 140,
@@ -196,8 +215,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 ),
                                 child: Image.asset(
                                   'assets/${category['image']}',
-                                  width: 105,
-                                  height: 105,
+                                  width: 115,
+                                  height: 115,
                                 ),
                               ),
                               Text(
@@ -205,7 +224,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                 textAlign: TextAlign.center,
                                 style: GoogleFonts.openSans(
                                   textStyle: TextStyle(
-                                    color: const Color(0xFF7C3AC8).withOpacity(0.8),
+                                    color: Color(0xFFED7749).withOpacity(0.8),
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold,
                                   ),

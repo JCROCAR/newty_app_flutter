@@ -13,6 +13,8 @@ import '../name_screen.dart';
 import 'package:educapp_demo/screens/principal_screen.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart' as localAuth;
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+
 
 
 
@@ -114,61 +116,81 @@ class _SignInScreenState extends State<SignInScreen> {
     }
   }
 
-
-  Future<void> _handleGoogleLogin(BuildContext context) async {
+  Future<void> handleAppleLogin(BuildContext context) async {
     try {
-      // Inicia el flujo de autenticación de Google
-      final GoogleSignIn googleSignIn = GoogleSignIn(
+      // 1️⃣ Solicitar credenciales de Apple
+      final appleCredential = await SignInWithApple.getAppleIDCredential(
         scopes: [
-          'email',
-          'profile',
-          'https://www.googleapis.com/auth/userinfo.email',
-          'https://www.googleapis.com/auth/userinfo.profile',
-          'openid', // Necesario para obtener el idToken
+          AppleIDAuthorizationScopes.email,
+          AppleIDAuthorizationScopes.fullName,
         ],
-        clientId: '897182599759-g60juut3ehrtpn5n86f1gvffa1pi661q.apps.googleusercontent.com',
       );
 
-
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) {
-        print('Login cancelado por el usuario');
-        return;
-      }
-      print('USUARIOOO');
-      print(googleUser);
-      // Obtén el ID token
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final String? idToken = googleAuth.idToken;
-
-      if (idToken == null) {
-        print('Error: No se obtuvo el ID token');
-        print('Access Token: ${googleAuth.accessToken}'); // Para depuración
-        return;
-      }
-
-      // Envía el ID token al servidor Django
-      final response = await http.post(
-        Uri.parse('http://your-django-server.com/auth/google/'), // Cambia por tu URL
-        headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({'id_token': idToken}),
+      // 2️⃣ Crear credenciales para Firebase
+      final oAuthProvider = OAuthProvider("apple.com");
+      final credential = oAuthProvider.credential(
+        idToken: appleCredential.identityToken,
+        accessToken: appleCredential.authorizationCode,
       );
 
-      if (response.statusCode == 200) {
-        final data = jsonDecode(response.body);
-        print('Login exitoso: $data');
-        // Maneja la respuesta (por ejemplo, guarda el token de sesión)
-      } else {
-        print('Error en el servidor: ${response.body}');
+      // 3️⃣ Login en Firebase
+      final UserCredential userCredential =
+      await FirebaseAuth.instance.signInWithCredential(credential);
+
+      final user = userCredential.user;
+
+      if (user == null) {
+        print("No se pudo autenticar con Firebase (Apple)");
+        return;
+      }
+
+      print("Usuario Apple en Firebase: ${user.email}");
+
+      final String? firebaseIdToken = await user.getIdToken();
+
+      if (firebaseIdToken == null) {
+        print("❌ No se pudo obtener el token de Firebase");
+        return;
+      }
+
+      // 5️⃣ Enviar a tu API de Django (exactamente igual a Google)
+      final data = await Provider.of<localAuth.AuthProvider>(context, listen: false)
+          .loginWithFirebaseIdToken(firebaseIdToken, user.email!);
+
+      if (data != null) {
+        final bool isNew = data['is_new'] ?? false;
+        final Map<String, dynamic> userMap = data['user'];
+        final int padresID = userMap['id'];
+        final String email = userMap['email'];
+
+        final storage = FlutterSecureStorage();
+        await storage.write(key: 'padresID', value: padresID.toString());
+
+        if (isNew) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => NameScreen(
+                onNext: (name) => print('Nombre recibido: $name'),
+                correoObtenido: true,
+                correo: email,
+                padresID: padresID,
+              ),
+            ),
+          );
+        } else {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => HomeScreen(userName: '')),
+          );
+        }
       }
     } catch (e) {
-      print('Error durante el login: $e');
+      print("Error en Apple Sign-In: $e");
     }
   }
 
-  void _handleEmailLogin(BuildContext context) {
-    // Tu lógica de login con correo
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -236,6 +258,29 @@ class _SignInScreenState extends State<SignInScreen> {
                   ),
                   label: Text(
                     'Continuar con Google',
+                    style: GoogleFonts.openSans(
+                      textStyle: const TextStyle(fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  style: OutlinedButton.styleFrom(
+                    backgroundColor: const Color(0xFFF2A452),
+                    foregroundColor: Colors.white,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: BorderSide.none,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () => handleAppleLogin(context),
+                  icon: Image.asset(
+                    'assets/apple-icon.jpg',
+                    height: 30,
+                  ),
+                  label: Text(
+                    'Continuar con Apple',
                     style: GoogleFonts.openSans(
                       textStyle: const TextStyle(fontWeight: FontWeight.bold),
                     ),

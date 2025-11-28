@@ -1,3 +1,4 @@
+import 'package:educapp_demo/widgets/instructions_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -30,10 +31,10 @@ class _ScienceScreen3State extends State<ScienceScreen3> {
   bool _wasBackgroundMusicPlaying = false; // Estado previo de la música de fondo
 
   final List<Map<String, String>> items = [
-    {'label': 'flor', 'image': 'assets/flower.png'},
-    {'label': 'árbol', 'image': 'assets/tree.png'},
-    {'label': 'semilla', 'image': 'assets/seed.png'},
-    {'label': 'hoja', 'image': 'assets/leaf.png'},
+    {'label': 'flor', 'image': 'assets/flor.png'},
+    {'label': 'árbol', 'image': 'assets/arbol.png'},
+    {'label': 'semilla', 'image': 'assets/semilla.png'},
+    {'label': 'hoja', 'image': 'assets/hoja.png'},
   ];
 
   @override
@@ -106,18 +107,18 @@ class _ScienceScreen3State extends State<ScienceScreen3> {
         children: [
           CircleAvatar(
             radius: 50,
-            backgroundColor: Colors.white,
+            backgroundColor: Colors.transparent,
             child: Padding(
 
               padding: const EdgeInsets.all(8.0),
-              child: Image.asset(imageAsset, width: 60, height: 60),
+              child: Image.asset(imageAsset, width: 90, height: 90),
             ),
           ),
           SizedBox(height: 15),
           Text(
             label[0].toUpperCase() + label.substring(1),
             style: GoogleFonts.openSans(
-              textStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Color(0xFFED7749)),
+              textStyle: TextStyle(fontSize: 25, fontWeight: FontWeight.bold, color: Color(0xFFEF898F)),
             )
           )
         ],
@@ -141,62 +142,61 @@ class _ScienceScreen3State extends State<ScienceScreen3> {
   }
 
   @override
-  @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+    final isLandscape = size.width > size.height;
+
     return Scaffold(
-      backgroundColor: const Color(0xFF6BACB4).withOpacity(0.7),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 40.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              // 🔠 Texto + icono de volumen
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Averigua el nombre de cada imagen',
-                    style: GoogleFonts.openSans(
-                      textStyle: const TextStyle(
-                        fontSize: 28,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF7C3AC8),
+      backgroundColor: const Color(0xFFF2FBFC),
+      body: SafeArea(
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // 🔠 Título + botón de audio
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Flexible(
+                          child: TitleText(text: 'Averigua el nombre de cada imagen')
+                        ),
+                        const SizedBox(width: 10),
+                        IconButton(
+                          icon:  Icon(Icons.volume_up, size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
+                          onPressed: () {
+                            _playAudio('averiguaelnombre');
+                          },
+                        ),
+                      ],
+                    ),
+
+                    SizedBox(height: isLandscape ? 20 : 10),
+
+                    // 🖼️ Grid responsivo
+                    Expanded(
+                      child: GridView.count(
+                        crossAxisCount: isLandscape ? 4 : 2,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        childAspectRatio: isLandscape ? 0.9 : 0.8,
+                        children: items
+                            .map((item) => _buildItem(item['label']!, item['image']!))
+                            .toList(),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Positioned(
-                    top: 20,
-                    right: 20,
-                    child: IconButton(
-                      icon: const Icon(Icons.volume_up, size: 40, color: Colors.white),
-                      onPressed: () {
-                        _playAudio('averiguaelnombre');// ⬅️ Reemplaza con el audio real
-                      },
-                    ),
-                  )
-                ],
-              ),
-              const SizedBox(height: 30),
-
-              // 🖼️ GridView con las imágenes
-              GridView.count(
-                crossAxisCount: 4,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                childAspectRatio: 0.85,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                children: items
-                    .map((item) => _buildItem(item['label']!, item['image']!))
-                    .toList(),
-              ),
-            ],
+                  ],
+                );
+              },
+            ),
           ),
         ),
       ),
     );
   }
+
 
 }

@@ -1,3 +1,4 @@
+import 'package:educapp_demo/widgets/instructions_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -106,72 +107,89 @@ class _LogicScreen1State extends State<LogicScreen1> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    final isLandscape = screenSize.width > screenSize.height;
+
     return Scaffold(
-      body: Stack(
-        children: [
-          Container(color: Color(0xFF87C5C4).withOpacity(0.7)),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Positioned(
-                  top: 20,
-                  right: 20,
-                  child: IconButton(
-                    icon: Icon(Icons.volume_up, size: 40, color: Colors.white),
-                    onPressed: () => _playAudio(_target.name.toLowerCase())
-                  ),
+      body: SafeArea(
+        child: Container(
+          color: const Color(0xFFEAF6F6),
+          width: double.infinity,
+          height: double.infinity,
+          child: Stack(
+            children: [
+              Positioned(
+                top: 10,
+                right: 10,
+                child: IconButton(
+                  icon:  Icon(Icons.volume_up, size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
+                  onPressed: () => _playAudio(_target.name.toLowerCase()),
                 ),
-                Text(
-                  'Selecciona ${_target.gender} ${_target.name}',
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 26,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF7C3AC8),
+              ),
+              Center(
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TitleText(text: 'Selecciona ${_target.gender} ${_target.name}'),
+                        SizedBox(height: screenSize.height * 0.03),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(
+                              _options.length,
+                                  (index) => Padding(
+                                padding: const EdgeInsets.symmetric(horizontal: 10),
+                                child: buildOption(index, _options[index], screenSize),
+                              ),
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: screenSize.height * 0.04),
+                        if (hasAnswered)
+                          SizedBox(
+                            height: isLandscape
+                                ? screenSize.height * 0.25
+                                : screenSize.height * 0.18,
+                            width: screenSize.width * 0.4,
+                            child: Lottie.asset(
+                              isCorrectAnswer
+                                  ? 'assets/correct.json'
+                                  : 'assets/incorrect.json',
+                              fit: BoxFit.contain,
+                            ),
+                          ),
+                      ],
                     ),
                   ),
-                  textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 20),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: List.generate(
-                      _options.length,
-                          (index) => Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: buildOption(index, _options[index]),
-                      ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 20),
-                if (hasAnswered)
-                  isCorrectAnswer
-                      ? Lottie.asset('assets/correct.json', height: 150, width: 150)
-                      : Lottie.asset('assets/incorrect.json', height: 150, width: 150),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
 
-  Widget buildOption(int index, _TransportItem item) {
+
+  Widget buildOption(int index, _TransportItem item, Size screenSize) {
     final isSelected = selectedIndex == index;
+    final optionSize = screenSize.width * 0.18; // tamaño relativo adaptable
+
     return GestureDetector(
       onTap: () => checkAnswer(item.isCorrect, index),
       child: Container(
-        width: 100,
-        height: 100,
+        width: optionSize,
+        height: optionSize,
         decoration: BoxDecoration(
-          color: isSelected ? Colors.blue[100] : Colors.white,
+          color: isSelected ? Colors.blue[100] : Colors.transparent,
           border: Border.all(
-            color: isSelected ? Colors.blue : Colors.black,
+            color: isSelected ? Colors.blue : Colors.transparent,
             width: 3,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -180,6 +198,7 @@ class _LogicScreen1State extends State<LogicScreen1> {
       ),
     );
   }
+
 }
 
 class _TransportItem {

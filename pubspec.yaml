@@ -39,6 +39,7 @@ dependencies:
   firebase_messaging: ^15.0.2
   firebase_core: ^3.15.2
   firebase_auth: ^5.7.0
+  sign_in_with_apple: ^6.0.0
 
 
 
@@ -170,6 +171,46 @@ flutter:
     - assets/semilla.wav
     - assets/hoja.wav
     - assets/google-logo.png
+    - assets/logica_categoria.png
+    - assets/ciencia_categoria.png
+    - assets/matematica_categoria.png
+    - assets/lenguaje_categoria.png
+    - assets/naranja.png
+    - assets/fresa.png
+    - assets/pollito.png
+    - assets/vaca.png
+    - assets/perro.png
+    - assets/casa.png
+    - assets/jungla.png
+    - assets/granja.png
+    - assets/elefante.png
+    - assets/tigre.png
+    - assets/pollito.png
+    - assets/flor.png
+    - assets/arbol.png
+    - assets/semilla.png
+    - assets/hoja.png
+    - assets/gato.png
+    - assets/cesto.png
+    - assets/pieza_1.png
+    - assets/pieza_2.png
+    - assets/pieza_3.png
+    - assets/pieza_4.png
+    - assets/caja.png
+    - assets/manzana_verde.png
+    - assets/piña.png
+    - assets/cesto_rojo.png
+    - assets/cesto_amarillo.png
+    - assets/cesto_verde.png
+    - assets/apple-icon.jpg
+    - assets/agua.png
+    - assets/tierra.png
+    - assets/aire.png
+    - assets/pez.png
+    - assets/ave.png
+    - assets/tortuga.png
+    - assets/mariposa.png
+
 
   fonts:
     - family: kbdarkhour

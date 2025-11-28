@@ -33,23 +33,27 @@ class _SplashScreenState extends State<SplashScreen> {
 
     final authProvider = Provider.of<AuthProvider>(context, listen: false);
 
-    // 👇 Asegúrate de cargar la sesión desde SharedPreferences
+    // Cargar sesión desde almacenamiento local
     await authProvider.loadSession();
 
-    if (authProvider.isAuthenticated) {
+    // 🔁 Intentar obtener un token válido (refresca si expiró)
+    final validToken = await authProvider.getValidAccessToken();
+
+    if (validToken != null) {
+      // Token válido, puede ingresar
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(
-          builder: (context) => HomeScreen(userName: '')
-        ),
+        MaterialPageRoute(builder: (context) => HomeScreen(userName: '')),
       );
     } else {
+      // No hay token válido, ir al login
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const LoginScreen()),
       );
     }
   }
+
 
 
   @override

@@ -1,3 +1,4 @@
+import 'package:educapp_demo/widgets/instructions_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -97,7 +98,7 @@ class _MathScreen2State extends State<MathScreen2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF87C5C4).withOpacity(0.7),
+      backgroundColor: Color(0xFFF2FBFC),
       body: Stack(
         children: [
           Center(
@@ -107,17 +108,7 @@ class _MathScreen2State extends State<MathScreen2> {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   // Texto superior
-                  Text(
-                    '¿Dónde está el número ${numberWords[_targetNumber]}?',
-                    style: GoogleFonts.openSans(
-                      textStyle: const TextStyle(
-                        fontSize: 32,
-                        fontWeight: FontWeight.bold,
-                        color: Color(0xFF7C3AC8),
-                      ),
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
+                  TitleText(text: '¿Dónde está el número ${numberWords[_targetNumber]}?'),
                   const SizedBox(height: 30),
 
                   // Botones
@@ -127,7 +118,7 @@ class _MathScreen2State extends State<MathScreen2> {
                       return ElevatedButton(
                         onPressed: () => _checkAnswer(number),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFF3C652),
+                          backgroundColor: Color(0xFF87c5c4),
                           padding: const EdgeInsets.all(26),
                           shape: const CircleBorder(),
                           elevation: 6,
@@ -155,7 +146,7 @@ class _MathScreen2State extends State<MathScreen2> {
             top: 20,
             right: 20,
             child: IconButton(
-              icon: Icon(Icons.volume_up, size: 40, color: Colors.white),
+              icon: Icon(Icons.volume_up, size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
               onPressed: () {
                 _playAudio('dondeestanumero$_targetNumber');
                 print('dondeestanumero$_targetNumber');

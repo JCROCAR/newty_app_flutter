@@ -1,3 +1,4 @@
+import 'package:educapp_demo/widgets/instructions_text.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
@@ -148,7 +149,7 @@ class _MathScreen3State extends State<MathScreen3>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF87C5C4).withOpacity(0.7),
+      backgroundColor: Color(0xFFF2FBFC),
       body: Stack(
         children: [
           Center(
@@ -161,23 +162,13 @@ class _MathScreen3State extends State<MathScreen3>
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Expanded(
-                        child: Text(
-                          'Completa la secuencia:',
-                          style: GoogleFonts.openSans(
-                            textStyle: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xFF7C3AC8),
-                            ),
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
+                        child: TitleText(text: 'Completa la secuencia:')
                       ),
                       Positioned(
                         top: 20,
                         right: 20,
                         child: IconButton(
-                          icon: Icon(Icons.volume_up, size: 40, color: Colors.white),
+                          icon: Icon(Icons.volume_up, size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
                           onPressed: () {
                             _readSequence();
                           },
@@ -197,7 +188,7 @@ class _MathScreen3State extends State<MathScreen3>
                             style: GoogleFonts.openSans(
                               textStyle: TextStyle(
                                 fontSize: 36,
-                                color: Colors.white,
+                                color: Colors.blueAccent.withOpacity(0.8),
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
@@ -210,7 +201,7 @@ class _MathScreen3State extends State<MathScreen3>
                           style: TextStyle(
                             fontSize: 36,
                             fontFamily: 'kbdarkhour',
-                            color: Colors.white,
+                            color: Colors.blueAccent.withOpacity(0.8),
                           ),
                         ),
                       ),
@@ -224,7 +215,7 @@ class _MathScreen3State extends State<MathScreen3>
                         onPressed:
                         _buttonsEnabled ? () => _checkAnswer(number) : null,
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Color(0xFFED7749).withOpacity(0.9),
+                          backgroundColor: Color(0xFFEF898F).withOpacity(0.9),
                           padding: EdgeInsets.all(20),
                           shape: CircleBorder(),
                           elevation: 6,

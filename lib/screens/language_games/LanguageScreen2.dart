@@ -8,6 +8,7 @@ import 'package:educapp_demo/utils/audio_singleton.dart'; // Importa tu Singleto
 import 'package:audioplayers/audioplayers.dart';
 
 import '../../services/actividad_registrada_service.dart';
+import '../../widgets/instructions_text.dart';
 
 
 
@@ -122,85 +123,93 @@ class _LanguageScreen2State extends State<LanguageScreen2> {
     ).join();
 
     return Scaffold(
-      backgroundColor: Color(0xFFEAF6F6),
-      body: Stack(
-        children: [
-          Positioned(
-            top: 40,
-            right: 20,
-            child: ElevatedButton(
-              onPressed: () => _speakCurrentWord(),
-              child: Icon(Icons.volume_up, size: 20),
-              style: ElevatedButton.styleFrom(
-                  shape: CircleBorder(),
-                  padding: EdgeInsets.all(10)
-              ),
-            ),
-          ),
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  constraints: BoxConstraints(maxHeight: 160, maxWidth: 160),
-                  child: Image.asset(_currentItem.image, fit: BoxFit.contain),
-                ),
-                SizedBox(height: 20),
-                DragTarget<String>(
-                  onAccept: _checkAnswer,
-                  builder: (context, candidateData, rejectedData) {
-                    return Text(
-                      _droppedLetter == null
-                          ? displayedWord
-                          : (_currentItem.word
-                          .replaceRange(missingIndex, missingIndex + 1, _droppedLetter!)
-                          .toUpperCase()),
-                      style: GoogleFonts.openSans(
-                        textStyle: TextStyle(
-                          fontSize: 50,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF7C3AC8)
-                        ),
-                      )
-                    );
-                  },
-                ),
-
-                SizedBox(height: 40),
-                Wrap(
-                  spacing: 20,
-                  children: ['A', 'E', 'I', 'O', 'U']
-                      .map((letter) => Draggable<String>(
-                    data: letter,
-                    feedback: _buildDraggableCircle(letter),
-                    childWhenDragging: Opacity(
-                      opacity: 0.3,
-                      child: _buildDraggableCircle(letter),
+      backgroundColor: const Color(0xFFF2FBFC),
+      body: SafeArea(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // ======= Texto + Ícono =======
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  TitleText(text: "Completa la palabra de la imagen"),
+                  IconButton(
+                    icon: Icon(
+                      Icons.volume_up,
+                      size: 40,
+                      color: const Color(0xFFFF9800),
                     ),
-                    child: _buildDraggableCircle(letter),
-                  ))
-                      .toList(),
+                    onPressed: _speakCurrentWord,
+                  ),
+                ],
+              ),
+              // ======= Imagen =======
+              Container(
+                constraints: const BoxConstraints(maxHeight: 120, maxWidth: 120),
+                child: Image.asset(
+                  _currentItem.image,
+                  fit: BoxFit.contain,
                 ),
-              ],
-            ),
-          ),
-        ],
-      ),
+              ),
+              // ======= Palabra =======
+              DragTarget<String>(
+                onAccept: _checkAnswer,
+                builder: (context, candidateData, rejectedData) {
+                  return Text(
+                    _droppedLetter == null
+                        ? displayedWord
+                        : (_currentItem.word
+                        .replaceRange(missingIndex, missingIndex + 1, _droppedLetter!)
+                        .toUpperCase()),
+                    style: GoogleFonts.openSans(
+                      textStyle: const TextStyle(
+                        fontSize: 30,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.lightBlueAccent,
+                      ),
+                    ),
+                  );
+                },
+              ),
 
+              const SizedBox(height: 15),
+              Wrap(
+                spacing: 15,
+                children: ['A', 'E', 'I', 'O', 'U']
+                    .map((letter) => Draggable<String>(
+                  data: letter,
+                  feedback: _buildDraggableCircle(letter),
+                  childWhenDragging: Opacity(
+                    opacity: 0.3,
+                    child: _buildDraggableCircle(letter),
+                  ),
+                  child: _buildDraggableCircle(letter),
+                ))
+                    .toList(),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
+
+
+
   }
 
   Widget _buildDraggableCircle(String letter) {
     return CircleAvatar(
-      radius: 30,
-      backgroundColor: Colors.white,
+      radius: 22,
+      backgroundColor: Colors.lightBlueAccent.withOpacity(0.5),
       child: Text(
         letter,
         style: GoogleFonts.openSans(
           textStyle: TextStyle(
-            fontSize: 30,
+            fontSize: 22,
             fontWeight: FontWeight.bold,
-            color: Color(0xFF7C3AC8)
+            color: Colors.white
           ),
         )
       ),

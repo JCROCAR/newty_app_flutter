@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:educapp_demo/widgets/instructions_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
@@ -35,10 +36,10 @@ class _MathScreen1State extends State<MathScreen1>  {
   bool _wasBackgroundMusicPlaying = false;
 
   final List<Map<String, String>> fruits = [
-    {'name': 'manzana', 'image': 'apple.png', 'plural': 'manzanas'},
+    {'name': 'manzana', 'image': 'manzana.png', 'plural': 'manzanas'},
     {'name': 'banana', 'image': 'banana.png', 'plural': 'bananas'},
-    {'name': 'naranja', 'image': 'orange.png', 'plural': 'naranjas'},
-    {'name': 'fresa', 'image': 'strawberry.png', 'plural': 'fresas'},
+    {'name': 'naranja', 'image': 'naranja.png', 'plural': 'naranjas'},
+    {'name': 'fresa', 'image': 'fresa.png', 'plural': 'fresas'},
   ];
 
   @override
@@ -133,105 +134,131 @@ class _MathScreen1State extends State<MathScreen1>  {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF87C5C4).withOpacity(0.7),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            // 🟣 Pregunta
-            Column(
+      backgroundColor: const Color(0xFFF2FBFC),
+      body: SafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            final screenHeight = constraints.maxHeight;
+            final screenWidth = constraints.maxWidth;
+
+            return Stack(
+              alignment: Alignment.center,
               children: [
-                Text(
-                  "¿Cuántas ${fruits.firstWhere((f) => f['name'] == selectedFruit)['plural']} puedes ver?",
-                  style: GoogleFonts.openSans(
-                    textStyle: TextStyle(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                      color: Color(0xFF7C3AC8),
-                    ),
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                Positioned(
-                  top: 20,
-                  right: 20,
-                  child: IconButton(
-                    icon: Icon(Icons.volume_up, size: 40, color: Colors.white),
-                    onPressed: () {
-                      _playAudio("cuantas${fruits.firstWhere((f) => f['name'] == selectedFruit)['plural']}");
-                    },
-                  ),
-                ),
-              ],
-            ),
-
-            // 🍎 Frutas mostradas horizontalmente
-            SingleChildScrollView(
-              scrollDirection: Axis.horizontal,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  fruitCount,
-                      (_) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 6),
-                    child: Image.asset(
-                      'assets/$fruitImage',
-                      width: 70,
-                      height: 70,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // 🔢 Opciones de respuesta
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: options.map((value) {
-                bool isSelected = selectedAnswer == value;
-                return GestureDetector(
-                  onTap: () => _handleAnswer(value),
-                  child: Container(
-                    padding: const EdgeInsets.all(12),
-                    decoration: BoxDecoration(
-                      color: Colors.lightBlue[100],
-                      border: Border.all(
-                        color: isSelected
-                            ? (isCorrect == true ? Colors.green : Colors.red)
-                            : Colors.blue,
-                        width: 3,
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: screenHeight,
                       ),
-                      borderRadius: BorderRadius.circular(15),
-                    ),
-                    child: Text(
-                      value.toString(),
-                      style: GoogleFonts.openSans(
-                        textStyle: TextStyle(
-                          fontSize: 30,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xFF7C3AC8),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // 🟣 Pregunta + Botón de audio
+                            Stack(
+                              alignment: Alignment.centerRight,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 60),
+                                  child: TitleText(text: "¿Cuántas ${fruits.firstWhere((f) => f['name'] == selectedFruit)['plural']} puedes ver?")
+                                ),
+                                IconButton(
+                                  icon:  Icon(Icons.volume_up,
+                                      size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
+                                  onPressed: () {
+                                    _playAudio(
+                                        "cuantas${fruits.firstWhere((f) => f['name'] == selectedFruit)['plural']}");
+                                  },
+                                ),
+                              ],
+                            ),
+
+                            SizedBox(height: screenHeight * 0.04),
+
+                            // 🍎 Frutas mostradas horizontalmente
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(
+                                  fruitCount,
+                                      (_) => Padding(
+                                    padding:
+                                    const EdgeInsets.symmetric(horizontal: 8),
+                                    child: Image.asset(
+                                      'assets/$fruitImage',
+                                      width: screenWidth * 0.15,
+                                      height: screenHeight * 0.25,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            SizedBox(height: screenHeight * 0.05),
+
+                            // 🔢 Opciones de respuesta
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: options.map((value) {
+                                bool isSelected = selectedAnswer == value;
+                                return GestureDetector(
+                                  onTap: () => _handleAnswer(value),
+                                  child: Container(
+                                    padding: const EdgeInsets.all(18),
+                                    decoration: BoxDecoration(
+                                      color: Colors.blue.withOpacity(0.1),
+                                      border: Border.all(
+                                        color: isSelected
+                                            ? (isCorrect == true
+                                            ? Colors.blueAccent
+                                            : Colors.red)
+                                            : Colors.transparent,
+                                        width: 3,
+                                      ),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Text(
+                                      value.toString(),
+                                      style: GoogleFonts.openSans(
+                                        textStyle: TextStyle(
+                                          fontSize: screenHeight * 0.08,
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blueAccent,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+
+                            SizedBox(height: screenHeight * 0.05),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                );
-              }).toList(),
-            ),
+                ),
 
-            // ✅ Feedback
-            if (isCorrect != null)
-              Lottie.asset(
-                isCorrect!
-                    ? 'assets/correct.json'
-                    : 'assets/incorrect.json',
-                width: 120,
-                height: 120,
-                repeat: false,
-              ),
-          ],
+                // ✅ Animación superpuesta centrada
+                if (isCorrect != null)
+                  Center(
+                    child: Lottie.asset(
+                      isCorrect! ? 'assets/correct.json' : 'assets/incorrect.json',
+                      width: screenWidth * 0.5,
+                      height: screenHeight * 0.6,
+                      repeat: false,
+                    ),
+                  ),
+              ],
+            );
+          },
         ),
       ),
+
+
     );
   }
 }

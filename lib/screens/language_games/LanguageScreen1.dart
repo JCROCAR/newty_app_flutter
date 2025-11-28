@@ -1,4 +1,5 @@
 import 'package:educapp_demo/services/actividad_registrada_service.dart';
+import 'package:educapp_demo/widgets/instructions_text.dart';
 import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -32,18 +33,18 @@ class _LanguageScreen1State extends State<LanguageScreen1> {
   final List<Map<String, dynamic>> _questions = [
     {
       'sound': 'assets/cow_sound.mp3',
-      'correct': 'cow.png',
-      'options': ['cow.png', 'dog.png', 'cat.png']
+      'correct': 'vaca.png',
+      'options': ['vaca.png', 'perro.png', 'gato.png']
     },
     {
       'sound': 'assets/dog_sound.mp3',
-      'correct': 'dog.png',
-      'options': ['cat.png', 'dog.png', 'cow.png']
+      'correct': 'perro.png',
+      'options': ['gato.png', 'perro.png', 'vaca.png']
     },
     {
       'sound': 'assets/cat_sound.mp3',
-      'correct': 'cat.png',
-      'options': ['cow.png', 'cat.png', 'dog.png']
+      'correct': 'gato.png',
+      'options': ['vaca.png', 'gato.png', 'perro.png']
     },
   ];
 
@@ -160,7 +161,7 @@ class _LanguageScreen1State extends State<LanguageScreen1> {
     }
 
     return Scaffold(
-      backgroundColor: Color(0xFFEAF6F6),
+      backgroundColor: Color(0xFFF2FBFC),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -172,20 +173,15 @@ class _LanguageScreen1State extends State<LanguageScreen1> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Text(
-                    '¿Qué suena así?',
-                    style: GoogleFonts.openSans(
-                      textStyle: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: Color(0xFF7C3AC8) )
-                    )
-                  ),
-                  SizedBox(height: 30),
-                  ElevatedButton(
-                    onPressed: () => _playIntroAndQuestion(),
-                    child: Icon(Icons.volume_up, size: 40),
-                    style: ElevatedButton.styleFrom(
-                      shape: CircleBorder(),
-                      padding: EdgeInsets.all(20),
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      TitleText(text: '¿Qué suena así?'),
+                      IconButton(
+                        icon:  Icon(Icons.volume_up, size: 40, color: Color(0xFFFF9800).withOpacity(0.8)),
+                        onPressed: () => _playIntroAndQuestion(),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 40),
                   Wrap(
@@ -197,10 +193,10 @@ class _LanguageScreen1State extends State<LanguageScreen1> {
                         onTap: () => _checkAnswer(img),
                         child: CircleAvatar(
                           radius: 60,
-                          backgroundColor: Colors.white,
+                          backgroundColor: Colors.transparent,
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Image.asset('assets/$img', width: 80, height: 80),
+                            child: Image.asset('assets/$img', width: 120, height: 120),
                           ),
                         ),
                       );
