@@ -210,6 +210,17 @@ flutter:
     - assets/ave.png
     - assets/tortuga.png
     - assets/mariposa.png
+    - assets/beaker_rosado.png
+    - assets/beaker_verde.png
+    - assets/beaker_azul.png
+    - assets/flor_rosa_roja.png
+    - assets/oruga.png
+    - assets/mariquita.png
+    - assets/tulipan.png
+    - assets/perrito_2.png
+    - assets/pollito_amarillo.png
+    - assets/pez_azul.png
+    - assets/girasol.png
 
 
   fonts:

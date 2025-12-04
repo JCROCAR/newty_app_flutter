@@ -4,6 +4,9 @@ import 'package:educapp_demo/screens/science_games/science_screen_2.dart';
 import 'package:educapp_demo/screens/science_games/science_screen_3.dart';
 import 'package:educapp_demo/screens/science_games/science_screen_4.dart';
 import 'package:educapp_demo/screens/science_games/science_screen_5.dart';
+import 'package:educapp_demo/screens/science_games/science_screen_6.dart';
+import 'package:educapp_demo/screens/science_games/science_screen_7.dart';
+import 'package:educapp_demo/screens/science_games/science_screen_8.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
@@ -32,6 +35,9 @@ class _ScienceGamesSectionState extends State<ScienceGamesSection> {
     'nombre_imagen': (id) => ScienceScreen3(actividadId: id),
     'colores_cubos': (id) => ScienceScreen4(actividadId: id),
     'ambientes': (id) => ScienceScreen5(actividadId: id),
+    'une_parejas': (id) => ScienceScreen6(actividadId: id),
+    'une_especies': (id) => ScienceScreen7(actividadId: id),
+    'circula_grupo': (id) => ScienceScreen8(actividadId: id),
   };
 
   @override
